@@ -24,14 +24,30 @@ public class CalculateurPrixView extends JFrame {
         prixArticleLabel.setLabelFor(prixArticleTextField);
         prixArticleTextField.setToolTipText("Entrez ici le montant d'un article");
 
+        JLabel quantiteLabel = new JLabel("Quantite : ");
+        JTextField quantiteTextField = new JTextField(10);
+        quantiteLabel.setLabelFor(quantiteLabel);
+        quantiteTextField.setToolTipText("Entrez ici la quantite");
+
         JLabel montantHTLabel = new JLabel("Montant HT : ");
         JFormattedTextField montantHTTextField = new JFormattedTextField(NumberFormat.getCurrencyInstance());
-        montantHTTextField.setValue(15);
         montantHTTextField.setEditable(false);
         montantHTLabel.setLabelFor(montantHTTextField);
 
+        JLabel paysLabel = new JLabel("Pays : ");
+        JComboBox paysComboBox = new JComboBox();
+        paysComboBox.addItem("Allemagne");
+        paysComboBox.addItem("Danemark");
+        paysComboBox.addItem("Belgique");
+        paysComboBox.addItem("France");
+
+        JLabel montantTTCLabel = new JLabel("Montant TTC : ");
+        JFormattedTextField montantTTCTextField = new JFormattedTextField(NumberFormat.getCurrencyInstance());
+        montantTTCTextField.setEditable(false);
+        montantTTCLabel.setLabelFor(montantTTCTextField);
+
         JButton computeButton = new JButton("Calculer");
-        computeButton.addActionListener(e -> this.presenter.onComputeButtonClicked(prixArticleTextField.getText()));
+        computeButton.addActionListener(e -> this.presenter.onComputeButtonClicked(prixArticleTextField.getText(), quantiteTextField.getText(),montantHTTextField, montantTTCTextField, paysComboBox.getSelectedIndex()));
 
         JPanel contentPane = new JPanel();
         setContentPane(contentPane);
@@ -39,11 +55,17 @@ public class CalculateurPrixView extends JFrame {
 
         JPanel labelPane = new JPanel(new GridLayout(0, 1));
         labelPane.add(prixArticleLabel);
+        labelPane.add(quantiteLabel);
+        labelPane.add(paysLabel);
         labelPane.add(montantHTLabel);
+        labelPane.add(montantTTCLabel);
 
         JPanel fieldPane = new JPanel(new GridLayout(0, 1));
         fieldPane.add(prixArticleTextField);
+        fieldPane.add(quantiteTextField);
+        fieldPane.add(paysComboBox);
         fieldPane.add(montantHTTextField);
+        fieldPane.add(montantTTCTextField);
 
         contentPane.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         add(labelPane, WEST);

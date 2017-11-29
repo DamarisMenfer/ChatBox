@@ -1,15 +1,12 @@
 package com.fredericboisguerin.insa.calculateurprix;
 
-import static java.awt.BorderLayout.EAST;
-import static java.awt.BorderLayout.SOUTH;
-import static java.awt.BorderLayout.WEST;
-import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import static javax.swing.JOptionPane.showMessageDialog;
-
+import javax.swing.*;
 import java.awt.*;
 import java.text.NumberFormat;
 
-import javax.swing.*;
+import static java.awt.BorderLayout.*;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 public class CalculateurPrixView extends JFrame {
 
@@ -17,7 +14,7 @@ public class CalculateurPrixView extends JFrame {
     private final JFormattedTextField montantHTTextField;
     private final JFormattedTextField montantTTCTextField;
 
-    public CalculateurPrixView() throws HeadlessException {
+    public CalculateurPrixView()  {
         super("Calculateur de prix");
         this.presenter = new CalculateurPrixPresenter(this);
 

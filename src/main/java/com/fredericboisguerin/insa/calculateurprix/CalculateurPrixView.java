@@ -14,6 +14,8 @@ import javax.swing.*;
 public class CalculateurPrixView extends JFrame {
 
     private final CalculateurPrixPresenter presenter;
+    private final JFormattedTextField montantHTTextField;
+    private final JFormattedTextField montantTTCTextField;
 
     public CalculateurPrixView() throws HeadlessException {
         super("Calculateur de prix");
@@ -30,7 +32,7 @@ public class CalculateurPrixView extends JFrame {
         quantiteTextField.setToolTipText("Entrez ici la quantite");
 
         JLabel montantHTLabel = new JLabel("Montant HT : ");
-        JFormattedTextField montantHTTextField = new JFormattedTextField(NumberFormat.getCurrencyInstance());
+        montantHTTextField = new JFormattedTextField(NumberFormat.getCurrencyInstance());
         montantHTTextField.setEditable(false);
         montantHTLabel.setLabelFor(montantHTTextField);
 
@@ -42,12 +44,12 @@ public class CalculateurPrixView extends JFrame {
         paysComboBox.addItem("France");
 
         JLabel montantTTCLabel = new JLabel("Montant TTC : ");
-        JFormattedTextField montantTTCTextField = new JFormattedTextField(NumberFormat.getCurrencyInstance());
+        montantTTCTextField = new JFormattedTextField(NumberFormat.getCurrencyInstance());
         montantTTCTextField.setEditable(false);
         montantTTCLabel.setLabelFor(montantTTCTextField);
 
         JButton computeButton = new JButton("Calculer");
-        computeButton.addActionListener(e -> this.presenter.onComputeButtonClicked(prixArticleTextField.getText(), quantiteTextField.getText(),montantHTTextField, montantTTCTextField, paysComboBox.getSelectedIndex()));
+        computeButton.addActionListener(e -> this.presenter.onComputeButtonClicked(prixArticleTextField.getText(), quantiteTextField.getText(), paysComboBox.getSelectedIndex()));
 
         JPanel contentPane = new JPanel();
         setContentPane(contentPane);
@@ -85,5 +87,13 @@ public class CalculateurPrixView extends JFrame {
         this.pack();
         this.setVisible(true);
         this.setLocationRelativeTo(null);
+    }
+
+    public void setHTValue(Float montant) {
+        montantHTTextField.setValue(montant);
+    }
+
+    public void setTTCValue(float v) {
+        montantTTCTextField.setValue(v);
     }
 }

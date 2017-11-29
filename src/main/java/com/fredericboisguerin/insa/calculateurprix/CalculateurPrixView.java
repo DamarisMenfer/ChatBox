@@ -13,11 +13,10 @@ public class CalculateurPrixView extends JFrame {
     private final CalculateurPrixPresenter presenter;
     private final JFormattedTextField montantHTTextField;
     private final JFormattedTextField montantTTCTextField;
+    private final JComboBox<Country> paysComboBox;
 
     public CalculateurPrixView()  {
         super("Calculateur de prix");
-        this.presenter = new CalculateurPrixPresenter(this);
-
         JLabel prixArticleLabel = new JLabel("Prix d'un article (€) : ");
         JTextField prixArticleTextField = new JTextField(10);
         prixArticleLabel.setLabelFor(prixArticleTextField);
@@ -34,11 +33,7 @@ public class CalculateurPrixView extends JFrame {
         montantHTLabel.setLabelFor(montantHTTextField);
 
         JLabel paysLabel = new JLabel("Pays : ");
-        JComboBox paysComboBox = new JComboBox();
-        paysComboBox.addItem("Allemagne");
-        paysComboBox.addItem("Danemark");
-        paysComboBox.addItem("Belgique");
-        paysComboBox.addItem("France");
+        paysComboBox = new JComboBox();
 
         JLabel montantTTCLabel = new JLabel("Montant TTC : ");
         montantTTCTextField = new JFormattedTextField(NumberFormat.getCurrencyInstance());
@@ -46,7 +41,6 @@ public class CalculateurPrixView extends JFrame {
         montantTTCLabel.setLabelFor(montantTTCTextField);
 
         JButton computeButton = new JButton("Calculer");
-        computeButton.addActionListener(e -> this.presenter.onComputeButtonClicked(prixArticleTextField.getText(), quantiteTextField.getText(), paysComboBox.getSelectedIndex()));
 
         JPanel contentPane = new JPanel();
         setContentPane(contentPane);
@@ -74,6 +68,15 @@ public class CalculateurPrixView extends JFrame {
         prixArticleTextField.requestFocus();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        this.presenter = new CalculateurPrixPresenter(this);
+        computeButton.addActionListener(e -> this.presenter.onComputeButtonClicked(prixArticleTextField.getText(), quantiteTextField.getText(), paysComboBox.getItemAt(paysComboBox.getSelectedIndex())));
+    }
+
+    public void fillComboBox(Country[] countries) {
+        for (Country country : countries) {
+            paysComboBox.addItem(country);
+        }
     }
 
     public void afficherErreur(String message) {
@@ -90,7 +93,7 @@ public class CalculateurPrixView extends JFrame {
         montantHTTextField.setValue(montant);
     }
 
-    public void setTTCValue(float v) {
-        montantTTCTextField.setValue(v);
+    public void setTTCValue(double value) {
+        montantTTCTextField.setValue(value);
     }
 }

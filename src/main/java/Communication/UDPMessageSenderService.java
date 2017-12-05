@@ -20,6 +20,28 @@ public class UDPMessageSenderService {
             byte[] b = message.getBytes();
             DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);
             sock.send(dp);
+            System.out.print(sock.getPort());
+            sock.close();
+        }
+
+        catch(IOException e)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
+    public static void sendBroadcastMessage(String ipAddress, int port, String message) throws Exception {
+        DatagramSocket sock = null;
+
+        try
+        {
+            sock = new DatagramSocket();
+            sock.setBroadcast(true);
+            InetAddress host = InetAddress.getByName(ipAddress);
+            byte[] b = message.getBytes();
+            DatagramPacket  dp = new DatagramPacket(b , b.length , host , port);
+            sock.send(dp);
             sock.close();
         }
 

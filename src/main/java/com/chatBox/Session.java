@@ -4,8 +4,12 @@ import Communication.UDPMessageSenderService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.net.Socket;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import static java.awt.BorderLayout.NORTH;
 import static java.awt.BorderLayout.SOUTH;
@@ -20,6 +24,9 @@ public class Session extends JFrame {
     private final ChatBoxPresenter presenter;
 
     JTextArea ta;
+
+    UDPMessageReceiverService receiverService;
+    Thread thread;
 
     public Session(ChatBoxPresenter presenter)  {
 
@@ -41,7 +48,30 @@ public class Session extends JFrame {
         sendButton.addActionListener(e -> sendMessage());
 
         this.presenter = presenter;
+
+        receiveMessage();
+        this.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                pullThePlug();
+                System.out.println("Session closed");
+                e.getWindow().dispose();
+            }
+        });
+
+        try {
+            System.out.println(InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
+
+    public void pullThePlug() {
+        receiverService.terminate();
+    }
+
 
 
     public void display() {
@@ -50,18 +80,25 @@ public class Session extends JFrame {
         this.setLocationRelativeTo(null);
     }
 
+    public void actualiseText(String message){
+        ta.setText(ta.getText().toString().concat("\n").concat(message));
+    }
+
     private void sendMessage(){
         try {
-            UDPMessageSenderService.sendMessageOn("127.0.0.1", 200, ta.getText());
-            ta.setText(String.format(NOTIFICATION_FORMAT, "127.0.0.1", 200));
+            UDPMessageSenderService.sendBroadcastMessage("127.0.0.1",2000, ta.getText());
+            actualiseText(String.format(NOTIFICATION_FORMAT, "127.0.0.1", 2000));
         } catch (Exception exception) {
             ta.setText(ERROR_MESSAGE_SEND);
         }
     }
 
     private void receiveMessage(){
+
         try {
-            //UDPMessageReceiverService.listenOnPort(200, this);
+            receiverService = new UDPMessageReceiverService(3000, this);
+            thread = new Thread(receiverService);
+            thread.start();
         } catch (Exception exception) {
             ta.setText(ERROR_MESSAGE_LISTEN);
         }
